@@ -1,0 +1,27 @@
+services:
+  postgre:
+    image: postgres:13.13
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_PASSWORD: pg1234
+      POSTGRES_USER: kubernews
+      POSTGRES_DB: kubernews
+  kubernews:
+    image: shaolinam/kuber-news:v1
+    depends_on:
+      - postgre
+    build:
+      context: ./src
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      DB_DATABASE: kubernews
+      DB_USERNAME: kubernews
+      DB_PASSWORD: pg1234
+      DB_HOST: postgre
+
+networks:
+  kubernews_net:
+    driver: bridge
